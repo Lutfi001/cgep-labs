@@ -1,0 +1,6 @@
+{
+    "LoggingEnabled": {
+        "TargetBucket": "cgep-lab-dev-logs-0ec9cf94",
+        "TargetPrefix": "access-logs/"
+    }
+}
