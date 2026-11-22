@@ -1,9 +1,14 @@
-# Compliance Policies (NIST 800-53)
+# Policy as Code Library (NIST 800-53)
 
-Automated Policy-as-Code rules evaluated against Terraform plan JSON using Open Policy Agent (OPA).
+This directory contains Rego policies evaluated via Conftest against Terraform plans. Each policy enforces a specific NIST 800-53 control for a target cloud provider.
 
-| Policy File | Control ID | Severity | Remediation |
-| :--- | :--- | :--- | :--- |
-| `policies/sc28_encryption.rego` | **SC-28** | High | Add an `encryption { default_kms_key_name = ... }` block referencing a `google_kms_crypto_key` you control. |
-| `policies/ac3_no_public.rego` | **AC-3** | Critical | Set `uniform_bucket_level_access = true` and `public_access_prevention = "enforced"`. For firewalls, narrow `source_ranges` or remove the rule. |
-| `policies/cm6_required_tags.rego` | **CM-6** | Medium | Add the four required labels (`project`, `environment`, `managed_by`, `compliance_scope`) to the resource. |
+## Policy Inventory
+
+| Control ID | Cloud | Policy File | Package Namespace | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| **SC-28** | GCP | `sc28_encryption.rego` | `compliance.sc28` | Ensures Cloud Storage buckets enforce encryption at rest. |
+| **SC-28** | AWS | `sc28_encryption_aws.rego` | `compliance.sc28_aws` | Ensures S3 buckets have a matching `aws_s3_bucket_server_side_encryption_configuration`. |
+| **AC-3** | GCP | `ac3_no_public.rego` | `compliance.ac3` | Prevents public ingress on GCP firewall rules. |
+| **AC-3** | AWS | `ac3_no_public_aws.rego` | `compliance.ac3_aws` | Ensures S3 buckets have an `aws_s3_bucket_public_access_block` with all four flags set to `true`. |
+| **CM-6** | GCP | `cm6_required_labels.rego` | `compliance.cm6` | Enforces required resource labels on GCP resources. |
+| **CM-6** | AWS | `cm6_required_tags_aws.rego` | `compliance.cm6_aws` | Enforces required resource tags (`Project`, `Environment`, `ManagedBy`, `ComplianceScope`) on AWS resources. |
